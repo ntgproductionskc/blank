@@ -1,0 +1,59 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.3",
+	"Category": "Games",
+	"Description": "Superman & Lois — Open World Action Game built in Unreal Engine 5",
+	"Modules": [
+		{
+			"Name": "SupermanLois",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"CoreUObject",
+				"UMG",
+				"Slate",
+				"SlateCore",
+				"AIModule",
+				"NavigationSystem",
+				"GameplayAbilities",
+				"GameplayTags",
+				"GameplayTasks",
+				"Niagara",
+				"EnhancedInput",
+				"MovieScene",
+				"LevelSequence",
+				"CinematicCamera",
+				"PhysicsCore",
+				"Chaos",
+				"GeometryCollectionEngine",
+				"FieldSystemEngine"
+			]
+		}
+	],
+	"Plugins": [
+		{ "Name": "GameplayAbilities",          "Enabled": true },
+		{ "Name": "Niagara",                    "Enabled": true },
+		{ "Name": "MetaSounds",                 "Enabled": true },
+		{ "Name": "EnhancedInput",              "Enabled": true },
+		{ "Name": "CinematicCamera",            "Enabled": true },
+		{ "Name": "LevelSequencer",             "Enabled": true },
+		{ "Name": "MovieRenderPipeline",        "Enabled": true },
+		{ "Name": "ChaosVehiclesPlugin",        "Enabled": true },
+		{ "Name": "GeometryCollectionPlugin",   "Enabled": true },
+		{ "Name": "VirtualHeightfieldMesh",     "Enabled": true },
+		{ "Name": "Water",                      "Enabled": true },
+		{ "Name": "PCG",                        "Enabled": true },
+		{ "Name": "WorldPartition",             "Enabled": true },
+		{ "Name": "Landmass",                   "Enabled": true },
+		{ "Name": "NNE",                        "Enabled": true },
+		{ "Name": "FullBodyIK",                 "Enabled": true },
+		{ "Name": "ControlRig",                 "Enabled": true },
+		{ "Name": "AnimationWarping",           "Enabled": true },
+		{ "Name": "MLDeformer",                 "Enabled": true },
+		{ "Name": "AudioModulation",            "Enabled": true },
+		{ "Name": "ResonanceAudio",             "Enabled": true },
+		{ "Name": "VariableRateShading",        "Enabled": true },
+		{ "Name": "PathTracing",                "Enabled": true }
+	]
+}

@@ -1,0 +1,112 @@
+{
+  "Note": "This JSON represents DataTable row exports for DT_Missions (FMissionData rows). Import into Unreal via DataTable JSON import.",
+  "Rows": [
+    {
+      "Name": "CH1_M1_Arrival",
+      "Title": "Welcome to Metropolis",
+      "Description": "Return to Metropolis after a threat call from the DOD. Something is wrong with the city's power grid.",
+      "Type": "Story",
+      "Chapter": 1,
+      "ReputationReward": 5.0,
+      "HasCutscene": true
+    },
+    {
+      "Name": "CH1_M2_PowerGrid",
+      "Title": "Lights Out",
+      "Description": "Metropolis's power grid is failing. Protect 3 substations and defeat the saboteurs.",
+      "Type": "Story",
+      "Chapter": 1,
+      "ReputationReward": 8.0,
+      "Prerequisites": ["CH1_M1_Arrival"]
+    },
+    {
+      "Name": "CH1_M3_MorganEdge",
+      "Title": "The Man Behind the Curtain",
+      "Description": "Morgan Edge / Tal-Rho has resurfaced. His X-Kryptonite operation threatens Smallville.",
+      "Type": "Story",
+      "Chapter": 1,
+      "ReputationReward": 15.0,
+      "HasCutscene": true,
+      "Prerequisites": ["CH1_M2_PowerGrid"]
+    },
+    {
+      "Name": "CH2_M1_BizarroWorld",
+      "Title": "Mirror Image",
+      "Description": "A portal opens over Metropolis — Bizarro and Inverse World forces pour through.",
+      "Type": "Story",
+      "Chapter": 2,
+      "ReputationReward": 20.0,
+      "HasCutscene": true,
+      "Prerequisites": ["CH1_M3_MorganEdge"]
+    },
+    {
+      "Name": "CH2_M2_InverseWorld",
+      "Title": "Into the Inverse",
+      "Description": "Superman must enter the Inverse World to defeat the Inverse Superman.",
+      "Type": "Story",
+      "Chapter": 2,
+      "ReputationReward": 25.0,
+      "HasCutscene": true,
+      "Prerequisites": ["CH2_M1_BizarroWorld"]
+    },
+    {
+      "Name": "CH3_M1_Doomsday",
+      "Title": "The End of All Things",
+      "Description": "Doomsday is unleashed on Metropolis. Evacuate civilians and defeat the unstoppable weapon.",
+      "Type": "Story",
+      "Chapter": 3,
+      "ReputationReward": 50.0,
+      "HasCutscene": true,
+      "Prerequisites": ["CH2_M2_InverseWorld"]
+    },
+    {
+      "Name": "SIDE_JordanPowers",
+      "Title": "Like Father, Like Son",
+      "Description": "Jordan's powers are surging. Clark must train him before someone gets hurt.",
+      "Type": "Companion",
+      "Chapter": 0,
+      "ReputationReward": 8.0
+    },
+    {
+      "Name": "SIDE_LoisInvestigates",
+      "Title": "Follow the Money",
+      "Description": "Lois investigates Lex Luthor's shell companies. Protect her without revealing your identity.",
+      "Type": "Companion",
+      "Chapter": 0,
+      "ReputationReward": 10.0
+    },
+    {
+      "Name": "SIDE_Bizarro_Redeemed",
+      "Title": "The Other Me",
+      "Description": "Bizarro shows signs of consciousness. Can Superman reach him before it's too late?",
+      "Type": "Side",
+      "Chapter": 2,
+      "ReputationReward": 12.0,
+      "Prerequisites": ["CH2_M1_BizarroWorld"]
+    },
+    {
+      "Name": "SIDE_DOD_Clash",
+      "Title": "Friendly Fire",
+      "Description": "The DOD has labeled Superman a threat. Lois must clear his name while he keeps the peace.",
+      "Type": "Side",
+      "Chapter": 1,
+      "ReputationReward": 10.0
+    },
+    {
+      "Name": "SIDE_Smallville_Tornado",
+      "Title": "Storm Season",
+      "Description": "An F4 tornado is bearing down on Smallville with Jonathan still at the farm.",
+      "Type": "Emergency",
+      "Chapter": 0,
+      "ReputationReward": 6.0
+    },
+    {
+      "Name": "SIDE_KryptonianArtifact",
+      "Title": "Fortress Secrets",
+      "Description": "A Kryptonian artifact has been stolen from the Fortress of Solitude and sold on the black market.",
+      "Type": "Side",
+      "Chapter": 2,
+      "ReputationReward": 15.0
+    }
+  ]
+}

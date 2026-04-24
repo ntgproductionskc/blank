@@ -1,0 +1,22 @@
+{
+  "Note": "DataTable rows for DT_Emergencies (FEmergencyData). Import via Unreal DataTable JSON import.",
+  "Rows": [
+    { "Name": "BuildingFire",           "Priority": "High",     "TimeLimit": 90,  "CiviliansAtRisk": 15, "PoliceUnits": 2, "FireUnits": 3, "AMBUnits": 2 },
+    { "Name": "MultiVehicleCrash",      "Priority": "Medium",   "TimeLimit": 120, "CiviliansAtRisk": 8,  "PoliceUnits": 3, "FireUnits": 1, "AMBUnits": 3 },
+    { "Name": "BridgeCollapse",         "Priority": "Critical", "TimeLimit": 60,  "CiviliansAtRisk": 30, "RequiresSuperman": true, "PoliceUnits": 6, "FireUnits": 3, "AMBUnits": 4 },
+    { "Name": "PlaneDown",              "Priority": "Critical", "TimeLimit": 45,  "CiviliansAtRisk": 150,"RequiresSuperman": true, "PoliceUnits": 4, "FireUnits": 4, "AMBUnits": 6 },
+    { "Name": "GasPipelineExplosion",   "Priority": "High",     "TimeLimit": 120, "CiviliansAtRisk": 5,  "FireUnits": 5, "AMBUnits": 3, "PoliceUnits": 3 },
+    { "Name": "HostageSituation",       "Priority": "High",     "TimeLimit": 150, "CiviliansAtRisk": 10, "PoliceUnits": 6, "AMBUnits": 2 },
+    { "Name": "BankRobbery",            "Priority": "Medium",   "TimeLimit": 180, "CiviliansAtRisk": 5,  "PoliceUnits": 4 },
+    { "Name": "VillainAttack",          "Priority": "Critical", "TimeLimit": 180, "CiviliansAtRisk": 50, "RequiresSuperman": true, "PoliceUnits": 8, "AMBUnits": 4 },
+    { "Name": "AlienInvasion",          "Priority": "Critical", "TimeLimit": 300, "CiviliansAtRisk": 500,"RequiresSuperman": true, "PoliceUnits": 12, "FireUnits": 6, "AMBUnits": 8 },
+    { "Name": "MetaHumanRampage",       "Priority": "Critical", "TimeLimit": 120, "CiviliansAtRisk": 35, "RequiresSuperman": true, "PoliceUnits": 6, "AMBUnits": 3 },
+    { "Name": "XKryptoniteContam",      "Priority": "Critical", "TimeLimit": 240, "CiviliansAtRisk": 25, "RequiresSuperman": true, "PoliceUnits": 4, "AMBUnits": 6 },
+    { "Name": "FloodingZone",           "Priority": "High",     "TimeLimit": 180, "CiviliansAtRisk": 40, "PoliceUnits": 5, "FireUnits": 3, "AMBUnits": 4 },
+    { "Name": "TornadoWarning",         "Priority": "High",     "TimeLimit": 90,  "CiviliansAtRisk": 20, "PoliceUnits": 3, "AMBUnits": 2 },
+    { "Name": "FarmAccident",           "Priority": "Low",      "TimeLimit": 180, "CiviliansAtRisk": 2,  "AMBUnits": 1 },
+    { "Name": "HighSchoolIncident",     "Priority": "Medium",   "TimeLimit": 120, "CiviliansAtRisk": 6,  "PoliceUnits": 4, "AMBUnits": 2 },
+    { "Name": "DomesticDisturbance",    "Priority": "Low",      "TimeLimit": 300, "CiviliansAtRisk": 2,  "PoliceUnits": 2 },
+    { "Name": "MassShootingThreat",     "Priority": "Critical", "TimeLimit": 60,  "CiviliansAtRisk": 20, "PoliceUnits": 8, "AMBUnits": 4 }
+  ]
+}
