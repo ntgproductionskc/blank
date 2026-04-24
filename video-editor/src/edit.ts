@@ -17,11 +17,14 @@ type StylePreset = {
   keywordColor: string;
 };
 
-// NTG Productions brand: warm antique gold + near-black + wordmark white.
-// Gold is tuned slightly brighter than the print logo so it stays readable
-// against varied video footage — print gold disappears on camera.
-const NTG_GOLD = "0xD4A84A";
-const NTG_WHITE = "0xF5F5F5";
+// NTG Productions brand, matched to the live site (ntgproductions.org):
+// warm orange accent, pure white captions, near-black background grade.
+// ntgproductions.org uses a split-color headline pattern — white setup
+// text + orange punchline. Captions mirror that: white body, orange on
+// keywords only.
+const NTG_ORANGE = "0xF5A03A";
+const NTG_GOLD = "0xD4A84A"; // logo-matched fallback (old-brand preset)
+const NTG_WHITE = "0xFFFFFF";
 
 const PUNCHY =
   "eq=saturation=1.20:contrast=1.10,curves=preset=increase_contrast";
@@ -29,14 +32,15 @@ const CINEMATIC =
   "curves=r='0/0 0.5/0.55 1/1':b='0/0.05 1/0.95',eq=saturation=0.9:contrast=1.05";
 const WARM = "colorbalance=rs=0.10:gs=0.02:bs=-0.08,eq=saturation=1.1";
 const MOODY = "eq=saturation=0.7:contrast=1.2:brightness=-0.05";
-// NTG grade: premium/editorial. Subtle contrast, faint warm bias toward
-// the gold accent. Not punchy — over-graded production work looks amateur.
-const NTG_GRADE =
-  "eq=saturation=1.06:contrast=1.04,colorbalance=rs=0.03:gs=0.01:bs=-0.03";
 
 const STYLES: Record<string, StylePreset> = {
   ntg: {
-    grade: NTG_GRADE,
+    grade: PUNCHY,
+    textColor: NTG_WHITE,
+    keywordColor: NTG_ORANGE,
+  },
+  "ntg-gold": {
+    grade: PUNCHY,
     textColor: NTG_WHITE,
     keywordColor: NTG_GOLD,
   },

@@ -1,33 +1,45 @@
 # NTG Productions — Brand Spec
 
-Locked-in values baked into the `ntg` style preset.
+Matched to the live site at **ntgproductions.org**.
 
 ## Palette
 
-| Role       | Hex       | FFmpeg         | Notes                                                |
-| ---------- | --------- | -------------- | ---------------------------------------------------- |
-| Gold       | `#D4A84A` | `0xD4A84A`     | Keyword highlight. Slightly brighter than the print logo gold (`~#C19A3E`) so it reads on video. |
-| Near-black | `#0A0A0A` | `0x0A0A0A`     | Background cards, strokes, safe-frame base.          |
-| Off-white  | `#F5F5F5` | `0xF5F5F5`     | Caption body text and wordmark.                      |
+| Role            | Hex       | FFmpeg     | Notes                                                                 |
+| --------------- | --------- | ---------- | --------------------------------------------------------------------- |
+| Orange (accent) | `#F5A03A` | `0xF5A03A` | Keyword highlight. Matches the site's accent and headline emphasis.   |
+| White (body)    | `#FFFFFF` | `0xFFFFFF` | Caption body text. Pure white, max contrast for mobile playback.      |
+| Near-black (bg) | `#0A0A0A` | `0x0A0A0A` | Intro/outro cards and any solid-frame base.                           |
+| Gold (legacy)   | `#D4A84A` | `0xD4A84A` | Old logo tone. Available as `ntg-gold` preset if you want the photo-brand vibe back. |
+
+## Signature pattern
+
+The site splits headlines: **white setup, orange punchline** — e.g. "Tired of Chasing Leads? *We'll Bring Them to You.*"
+
+The caption engine already mirrors this: white body words, orange on keywords. One-to-one match with the web brand.
 
 ## Typography
 
-- Geometric sans, bold, tracked out on secondary text — matches your wordmark.
-- Recommended: **Montserrat Black** or **Poppins Black** (both free).
+- Geometric sans, bold/black weight, tight letter-spacing. Same feel as the "NTGPRODUCTIONS" wordmark.
+- Recommended: **Inter Black**, **General Sans Bold**, or **Plus Jakarta Sans Black** (all free).
 - To use: drop the `.ttf` at `assets/fonts/caption.ttf`. The renderer auto-detects it.
+
+## Grade
+
+Punchy — contrast boost, increased saturation. Matches the performance-marketing / sales tone of the site ("No vanity metrics. No manual work. Just revenue."), not cinematic-editorial restraint.
 
 ## Logo overlay
 
-- Drop the transparent-background logo PNG at `assets/logo.png`.
-- The renderer auto-detects and overlays it **top-right, 7% of frame width, 85% opacity** — discreet watermark, not dominating.
-- Use a transparent PNG (your gold shutter + white wordmark on alpha), not the black-card version from social.
+- Drop a transparent-background logo PNG at `assets/logo.png`.
+- Auto-placed **top-right, 7% of frame width, 85% opacity** — discreet watermark.
 
 ## Handles
 
 - IG (personal): `@natethecameraman`
 - IG (brand): `@ntgproductions_`
-- Web: `ngproductions.org`
+- Web: `ntgproductions.org`
 
-## Grade
+## Presets available
 
-Premium/editorial — subtle contrast + faint warm bias. Not punchy. Over-graded production work reads amateur; the `ntg` preset is intentionally understated so the subject carries the frame.
+- `ntg` — **default**. Orange accent matched to the live site.
+- `ntg-gold` — Gold accent matched to the older logo. Same punchy grade.
+- `hormozi-gold`, `hormozi-yellow`, `cinematic`, `warm`, `moody` — generic fallbacks.
