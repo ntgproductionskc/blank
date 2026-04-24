@@ -9,8 +9,8 @@ export type Segment = {
   clip: string;
   start: number;
   end: number;
-  caption: string;
   emphasis: Emphasis;
+  keywords: string[];
 };
 
 export type EditPlan = { segments: Segment[] };
@@ -22,15 +22,15 @@ export type HighlightOptions = {
   brief: string;
 };
 
-const SYSTEM_PROMPT = `You are an expert short-form video editor. You receive transcripts of raw video clips with word-level timestamps, and you select the best moments to form a tight, engaging final edit.
+const SYSTEM_PROMPT = `You are an expert short-form video editor in the style of Alex Hormozi / Iman Gadzhi: direct, punchy, no dead air, word-by-word captions with keyword highlights. You receive transcripts of raw video clips with word-level timestamps and select the tightest, highest-retention moments.
 
 Rules:
-- Each segment must be 2-8 seconds long.
-- Prefer hooks, punchlines, emotional beats, and quotable lines.
-- Segments should flow — intro, rising moments, punchlines, outro.
-- Caption text should be 2-6 words, punchy, and sourced from what's actually said (paraphrase is fine).
-- Emphasis "hook" and "punchline" trigger a zoom effect in render; use them for the highest-energy lines.
-- Timestamps must come from the words provided. Round to 2 decimals.
+- Each segment must be 2-8 seconds of near-continuous speech. Pick ranges where consecutive words are <0.3s apart. Skip breaths, ums, and silences by choosing tight start/end times.
+- Prioritize hooks (opening lines that stop the scroll), punchlines, concrete numbers, bold claims, and emotional beats.
+- The first segment must be a strong hook — curiosity, contrarian claim, or specific promise. No throat-clearing.
+- For each segment, return 1-4 keywords from what was actually said — the highest-charge words in that segment (the noun, number, or verb that carries the meaning). These will be highlighted in brand gold. Keywords must appear verbatim in the spoken words within the segment range. Use lowercase.
+- Emphasis "hook" and "punchline" trigger a zoom effect; use them sparingly for the highest-energy lines.
+- Timestamps must come from the word timestamps provided. Round to 2 decimals.
 - Total duration of all segments should be close to the target (+/- 20%).
 - Return exactly one edit plan via the emit_edit_plan tool.`;
 
@@ -92,22 +92,28 @@ export async function pickHighlights(
                   },
                   start: {
                     type: "number",
-                    description: "Start time in seconds (from word timestamps).",
+                    description:
+                      "Start time in seconds (from word timestamps).",
                   },
                   end: {
                     type: "number",
-                    description: "End time in seconds (from word timestamps).",
-                  },
-                  caption: {
-                    type: "string",
-                    description: "Short on-screen caption (2-6 words).",
+                    description:
+                      "End time in seconds (from word timestamps).",
                   },
                   emphasis: {
                     type: "string",
                     enum: ["intro", "hook", "punchline", "outro", "moment"],
                   },
+                  keywords: {
+                    type: "array",
+                    description:
+                      "1-4 verbatim lowercase words spoken inside this segment to highlight in gold.",
+                    items: { type: "string" },
+                    minItems: 1,
+                    maxItems: 4,
+                  },
                 },
-                required: ["clip", "start", "end", "caption", "emphasis"],
+                required: ["clip", "start", "end", "emphasis", "keywords"],
               },
             },
           },

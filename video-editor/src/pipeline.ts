@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { transcribeClip, type Word } from "./transcribe.ts";
-import { pickHighlights } from "./highlights.ts";
-import { assembleVideo } from "./edit.ts";
+import { pickHighlights, type Segment } from "./highlights.ts";
+import { assembleVideo, type RenderSegment } from "./edit.ts";
 
 export type RunOptions = {
   input: string;
@@ -43,13 +43,29 @@ export async function run(opts: RunOptions): Promise<void> {
     brief: opts.brief,
   });
 
+  const wordsByClip = new Map(transcripts.map((t) => [t.clip, t.words]));
+  const renderSegments: RenderSegment[] = plan.segments.map((seg) => ({
+    ...seg,
+    words: sliceWords(wordsByClip.get(seg.clip) ?? [], seg),
+  }));
+
   console.log(
-    `Selected ${plan.segments.length} segment(s). Rendering to ${opts.output}...`,
+    `Selected ${renderSegments.length} segment(s). Rendering to ${opts.output}...`,
   );
-  await assembleVideo(plan, opts.output, {
+  await assembleVideo(renderSegments, opts.output, {
     style: opts.style,
     aspect: opts.aspect,
   });
 
   console.log("Done.");
+}
+
+function sliceWords(words: Word[], seg: Segment): Word[] {
+  return words
+    .filter((w) => w.end > seg.start && w.start < seg.end)
+    .map((w) => ({
+      text: w.text,
+      start: Math.max(0, w.start - seg.start),
+      end: Math.min(seg.end - seg.start, w.end - seg.start),
+    }));
 }

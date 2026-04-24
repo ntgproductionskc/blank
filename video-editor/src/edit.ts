@@ -2,15 +2,52 @@ import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { EditPlan, Segment } from "./highlights.ts";
+import type { Segment } from "./highlights.ts";
+import type { Word } from "./transcribe.ts";
 
-const COLOR_GRADES: Record<string, string> = {
-  punchy:
-    "eq=saturation=1.25:contrast=1.12,curves=preset=increase_contrast",
-  cinematic:
-    "curves=r='0/0 0.5/0.55 1/1':b='0/0.05 1/0.95',eq=saturation=0.9:contrast=1.05",
-  warm: "colorbalance=rs=0.10:gs=0.02:bs=-0.08,eq=saturation=1.1",
-  moody: "eq=saturation=0.7:contrast=1.2:brightness=-0.05",
+export type RenderSegment = Segment & {
+  words: Word[];
+};
+
+type StylePreset = {
+  grade: string;
+  textColor: string;
+  keywordColor: string;
+};
+
+const PUNCHY =
+  "eq=saturation=1.20:contrast=1.10,curves=preset=increase_contrast";
+const CINEMATIC =
+  "curves=r='0/0 0.5/0.55 1/1':b='0/0.05 1/0.95',eq=saturation=0.9:contrast=1.05";
+const WARM = "colorbalance=rs=0.10:gs=0.02:bs=-0.08,eq=saturation=1.1";
+const MOODY = "eq=saturation=0.7:contrast=1.2:brightness=-0.05";
+
+const STYLES: Record<string, StylePreset> = {
+  "hormozi-gold": {
+    grade: PUNCHY,
+    textColor: "0xFFFFFF",
+    keywordColor: "0xFFD700",
+  },
+  "hormozi-yellow": {
+    grade: PUNCHY,
+    textColor: "0xFFFFFF",
+    keywordColor: "0xFFEB3B",
+  },
+  cinematic: {
+    grade: CINEMATIC,
+    textColor: "0xFFFFFF",
+    keywordColor: "0xFFD700",
+  },
+  warm: {
+    grade: WARM,
+    textColor: "0xFFFFFF",
+    keywordColor: "0xE8B923",
+  },
+  moody: {
+    grade: MOODY,
+    textColor: "0xFFFFFF",
+    keywordColor: "0xFFD700",
+  },
 };
 
 const ASPECTS: Record<string, { w: number; h: number }> = {
@@ -25,26 +62,30 @@ type RenderOpts = {
 };
 
 export async function assembleVideo(
-  plan: EditPlan,
+  segments: RenderSegment[],
   output: string,
   opts: RenderOpts,
 ): Promise<void> {
   const dims = ASPECTS[opts.aspect] ?? ASPECTS["9:16"]!;
-  const grade = COLOR_GRADES[opts.style] ?? COLOR_GRADES.punchy!;
+  const style = STYLES[opts.style] ?? STYLES["hormozi-gold"]!;
 
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "video-editor-"));
   try {
     const segFiles: string[] = [];
-    for (let i = 0; i < plan.segments.length; i++) {
-      const seg = plan.segments[i]!;
+    for (let i = 0; i < segments.length; i++) {
+      const seg = segments[i]!;
       const outFile = path.join(
         tmp,
         `seg_${String(i).padStart(3, "0")}.mp4`,
       );
+      const preview = seg.words
+        .map((w) => w.text)
+        .join(" ")
+        .slice(0, 60);
       process.stdout.write(
-        `  [${i + 1}/${plan.segments.length}] ${seg.emphasis}: "${seg.caption}"... `,
+        `  [${i + 1}/${segments.length}] ${seg.emphasis}: "${preview}"... `,
       );
-      await renderSegment(seg, outFile, { ...dims, grade });
+      await renderSegment(seg, outFile, { ...dims, style });
       segFiles.push(outFile);
       console.log("ok");
     }
@@ -87,25 +128,59 @@ export async function assembleVideo(
 }
 
 async function renderSegment(
-  seg: Segment,
+  seg: RenderSegment,
   outFile: string,
-  opts: { w: number; h: number; grade: string },
+  opts: { w: number; h: number; style: StylePreset },
 ): Promise<void> {
   const duration = Math.max(0.5, seg.end - seg.start);
   const punch = seg.emphasis === "hook" || seg.emphasis === "punchline";
-  const captionText = escapeDrawText(seg.caption);
-  const fontSize = Math.round(opts.w * 0.06);
-  const borderW = Math.max(2, Math.round(fontSize * 0.08));
 
-  const captionFilter =
-    `drawtext=text='${captionText}'` +
-    `:fontcolor=white` +
-    `:fontsize=${fontSize}` +
-    `:borderw=${borderW}` +
-    `:bordercolor=black` +
-    `:x=(w-text_w)/2` +
-    `:y=h-h/4` +
-    `:alpha='if(lt(t,0.3),t/0.3,1)'`;
+  const keywordSet = new Set(
+    seg.keywords.flatMap((k) =>
+      k
+        .toLowerCase()
+        .split(/\s+/)
+        .map((w) => w.replace(/[^a-z0-9']/g, ""))
+        .filter(Boolean),
+    ),
+  );
+
+  const fontSize = Math.round(opts.w * 0.078);
+  const borderW = Math.max(3, Math.round(fontSize * 0.12));
+  const yPos = "h*0.42-text_h/2";
+
+  const wordFilters: string[] = [];
+  for (let i = 0; i < seg.words.length; i++) {
+    const w = seg.words[i]!;
+    const nextStart =
+      i + 1 < seg.words.length ? seg.words[i + 1]!.start : duration + 0.05;
+    const displayStart = Math.max(0, w.start).toFixed(3);
+    const displayEnd = Math.min(duration, nextStart).toFixed(3);
+
+    const displayText = w.text
+      .replace(/[^\p{L}\p{N}\s'-]/gu, "")
+      .trim()
+      .toUpperCase();
+    if (!displayText) continue;
+
+    const matchKey = w.text
+      .toLowerCase()
+      .replace(/[^a-z0-9']/g, "");
+    const color = keywordSet.has(matchKey)
+      ? opts.style.keywordColor
+      : opts.style.textColor;
+
+    wordFilters.push(
+      `drawtext=text='${escapeDrawText(displayText)}'` +
+        `:fontcolor=${color}` +
+        `:fontsize=${fontSize}` +
+        `:borderw=${borderW}` +
+        `:bordercolor=black` +
+        `:x=(w-text_w)/2` +
+        `:y=${yPos}` +
+        `:enable='between(t,${displayStart},${displayEnd})'`,
+    );
+  }
 
   const baseScale =
     `scale=${opts.w}:${opts.h}:force_original_aspect_ratio=increase,` +
@@ -116,13 +191,13 @@ async function renderSegment(
       `d=1:s=${opts.w}x${opts.h}:fps=30,setsar=1`
     : null;
 
-  const vf = [baseScale, opts.grade, zoom, captionFilter]
+  const vf = [baseScale, opts.style.grade, zoom, ...wordFilters]
     .filter((s): s is string => !!s)
     .join(",");
 
   const af =
-    `afade=t=in:st=0:d=0.15,` +
-    `afade=t=out:st=${(duration - 0.15).toFixed(3)}:d=0.15`;
+    `afade=t=in:st=0:d=0.1,` +
+    `afade=t=out:st=${Math.max(0, duration - 0.1).toFixed(3)}:d=0.1`;
 
   await ffmpeg([
     "-y",
@@ -164,9 +239,11 @@ function escapeDrawText(s: string): string {
 
 function ffmpeg(args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
-    const proc = spawn("ffmpeg", ["-hide_banner", "-loglevel", "error", ...args], {
-      stdio: ["ignore", "inherit", "inherit"],
-    });
+    const proc = spawn(
+      "ffmpeg",
+      ["-hide_banner", "-loglevel", "error", ...args],
+      { stdio: ["ignore", "inherit", "inherit"] },
+    );
     proc.on("error", (err) =>
       reject(
         new Error(
