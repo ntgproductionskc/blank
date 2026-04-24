@@ -13,8 +13,8 @@ program
   .requiredOption("-o, --output <file>", "Output video path (.mp4)")
   .option(
     "-s, --style <name>",
-    "Style preset: hormozi-gold | hormozi-yellow | cinematic | warm | moody",
-    "hormozi-gold",
+    "Style preset: ntg | hormozi-gold | hormozi-yellow | cinematic | warm | moody",
+    "ntg",
   )
   .option(
     "-a, --aspect <ratio>",
